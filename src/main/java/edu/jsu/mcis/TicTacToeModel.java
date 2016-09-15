@@ -1,16 +1,11 @@
 package edu.jsu.mcis; 
 
-public class TicTacToeModel{
+public class TicTacToeModel {
 	public int[][] grid; 
-	public boolean winner;
-	public boolean tie;
-	public String win;
-	
-	public int counter;
-	
+	private String player;
+		
 	public TicTacToeModel(){
 		grid = new int[3][3];
-		counter = 0;
 	}
 
 	public String getMark(int row, int col){
@@ -22,10 +17,18 @@ public class TicTacToeModel{
 		}
 		else return "O";
 	}
+	
+	
+	private void switchPlayer() {
+		if (player.equals("X")) {
+			player = "O";
+		} 
+		else {
+			player = "X";
+		}
+	}
 
 	public void makeMark(String mark, int row, int col){
-		
-		
 		if(grid[row][col] < 1){
 			if(mark.equals("X")){
 				grid[row][col] = 1;
@@ -36,111 +39,61 @@ public class TicTacToeModel{
 			else if(mark.equals("")){
 				grid[row][col] = 0; 
 			}
-			counter++;
 		}
 	}
 	
-	public boolean HorizontalWin(){
-		
-		for(int i=0; i<3; i++){
-		
-			if(getMark(0, i).equals("X") || (getMark(0, i).equals("O"))){
-				winner = true;
+	private String horizontalWin() {
+		for(int i=0; i<3; i++) {
+			if(grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2] && grid[i][0] > 0) {
+				return getMark(i, 0);
 			}
-			else if(getMark(1, i).equals("X") || (getMark(1, i).equals("O"))){
-				winner = true;
-			}
-			else if(getMark(2, i).equals("X") || (getMark(2, i).equals("O"))){
-				winner = true;
-			}
-			else{
-				winner = false;
-			}
-		
 		}
-		return winner;
+		return "";
 	}
 		
-	public boolean VerticalWin(){
-		
-		for(int i = 0; i<3; i++){
-		if(getMark(i, 0).equals("X") || (getMark(i,0).equals("O"))){
-				winner = true;
+	private String verticalWin(){
+		for(int i=0; i<3; i++) {
+			if(grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i] && grid[0][i] > 0) {
+				return getMark(0, i);
 			}
-			else if(getMark(i, 1).equals("X") || (getMark(i,1).equals("O"))){
-				winner = true;
-			}
-			else if(getMark(i, 2).equals("X") || (getMark(i,2).equals("O"))){
-				winner = true;
-			}
-			else{
-				winner = false;
-			}
-			
 		}
-		return winner;
+		return "";
 	}
 	
-	public boolean DiagonalWin(){
-		
-		if(grid[0][0] == grid[1][1] && 
-			grid[0][0] == grid[2][2] &&
-			grid[0][0] != 0){
-			
-			return true;
+	private String diagonalWin(){
+		if(grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2] && grid[0][0] > 0) {
+			return getMark(0, 0);
 		}
-		else if(grid[0][2] == grid[1][1] &&
-				grid[0][2] == grid[2][0] &&
-				grid[0][2] != 0){
-					return true;
-				}
-		else{
-			return false;
+		else if(grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0] && grid[0][2] > 0){
+			return getMark(0, 2);
 		}
-		
-		
+		else {
+			return "";
+		}
 	}
 			
-	
-	
-	public boolean TieGame(){
+	private boolean tieGame(){
+		boolean tie = true;
 		for(int i = 0; i<3; i++){
 			for(int j = 0; j<3; j++){
-				
-				if(getMark(i, j).equals("X")|| getMark(i, j).equals("O")){
-					
-					tie = true;
-				}
-				else{
-					
+				if(grid[i][j] == 0){
 					tie = false;
-				}	
+				}
 			}
 		}
 		return tie;
-		
 	}
 	
 	
 	public String getWinner(){
-		
-		
-		
-		if(HorizontalWin()){
-			win = "X";
-		}
-		else if(DiagonalWin()){
-			win = "X";
-		}
-		else{
-			if(TieGame()){
-				win = "TIE";
-			}
-		}
-		
-		
-		return win;
-		
+		String h = horizontalWin();
+		String v = verticalWin();
+		String d = diagonalWin();
+		if(h.length() > 0) return h;
+		else if(v.length() > 0) return v;
+		else if(d.length() > 0) return d;		
+		else if(tieGame()) return "TIE";
+		else return "";
 	}
 	
 	
